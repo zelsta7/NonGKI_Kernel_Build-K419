@@ -103,6 +103,16 @@ jobs:
         sudo apt-get install -y bc bison build-essential ccache curl flex g++-multilib gcc-multilib git git-lfs gnupg gperf imagemagick lib32ncurses-dev lib32readline-dev lib32z1-dev liblz4-tool libncurses6 libncurses-dev libsdl1.2-dev libssl-dev libwxgtk3.2-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev binutils-aarch64-linux-gnu binutils-arm-linux-gnueabi
         mkdir -p $GITHUB_WORKSPACE/kernel_workspace
 
+    - name: Prepare GNU assembler for clang
+      run: |
+        mkdir -p $HOME/gnu64/bin
+        for t in /usr/bin/aarch64-linux-gnu-*; do
+          b=$(basename "$t")
+          ln -sf "$t" "$HOME/gnu64/bin/$b"
+          ln -sf "$t" "$HOME/gnu64/bin/${b#aarch64-linux-gnu-}"
+        done
+        $HOME/gnu64/bin/as --version | head -1
+
     - name: Install python2
       if: env.ENABLE_PYTHON2 == 'true'
       run: |
